@@ -1,0 +1,15 @@
+{% load timetags %}
+<li onclick="Show('{{ message.id }}')" style="text-align:left !important;" class="message-summary{{ section }} div visible result {% if message.public == "1" %}public{% else %}private{% endif %} {% if message.decoded == "1" %}read{% else %}unread{% endif %}" style="padding-bottom: 2px;padding-top: 5px;"
+        data-search-term="{{ message.id }} to:{{ message.destination_id }} in:{{ message.location_id }} to:{{ message.destination_name }} in:{{ message.location_name }} {{ message.name }}">
+    <br><div class="pull-right" style="margin-right:10px; width:35% !important;">
+        <div class="date pull-right" style="font-size:14px !important;">{{ message.last_updated|print_timestamp|date:"f, d M. o"}}</div>
+        <div class="pull-right">{{ message.last_updated|print_timestamp|timesince}}</div>
+    </div>
+    <div style="font-size: 14px;" class="message-summary title" title="{{ message.id }}" >{{ message.name }}</div>
+    {% if message.decoded == "1" %}<i title="read" class="halflings-icon list-alt"></i>{% else %} <i title="unread" class="halflings-icon envelope"></i>{% endif %} {% if message.public == "1" %}<i title="public" class="halflings-icon ok-circle"></i> {% else %}<i title="private" class="halflings-icon ban-circle"></i>{% endif %}
+   {% if message.last_known_location.longitude != "" %}<span id="location-{{ message.id|cut:"#"}}" onmouseover="LoadLocation(this);" data-longitude="{{ message.last_known_location.longitude }}" data-latitude="{{ message.last_known_location.latitude }}" title="[{{ message.last_known_location.latitude}},{{ message.last_known_location.longitude }}]"><i class="halflings-icon globe"></i></span>{% endif %}
+    <span title="location"><i class="fa-icon-user"></i> {{ message.location_name }}</span> <span title="destination"><i class="fa-icon-signout"></i> {{ message.destination_name }}</span>
+    <span title="message_cost" style="display:none"><i class="fa-icon-upload-alt"></i> {{ message.message_cost }}</span>
+    <br><span class="label label-info">{{ message.blue_mana|floatformat:2}}</span> <span class="label label-important">{{ message.red_mana|floatformat:2}}</span> <span class="label label-yellow">{{ message.green_mana|floatformat:2 }}</span>
+<br>
+</li>

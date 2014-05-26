@@ -1,0 +1,39 @@
+{% extends "includes/base.html" %}
+{% block additionaljavascript %}
+    <!-- BEGIN TimelineJS -->
+    <script type="text/javascript" src="/static/timeline/js/storyjs-embed.js"></script>
+    <script>
+        $(document).ready(function() {
+            createStoryJS({
+                type:		'timeline',
+                width:		'800',
+                height:		'220',
+                source:		'/static/timeline/example_json.json',
+                embed_id:	'my-timeline',
+                debug:		true,
+                orientation: 'vertical',
+            });
+        });
+    </script>
+    <style>
+        .vco-feature .nav-next, .vco-feature .nav-prev { visibility:hidden !important; }
+        .vco-feature { height:0px !important; }
+        .vco-feature .slider-container { display:none !important; }
+        .storyjs-embed  {
+            -buz-transform:rotate(90deg);
+            -buz-transform-origin: 500px 400px;
+            -ms-transform:rotate(90deg);
+            margin-top:900px !important;
+            float:right;
+        }
+
+    </style>
+    <!-- END TimelineJS -->
+{% endblock additionaljavascript %}
+{% block content %}
+    <div style="{width: 100%;min-height:674px}">
+        <div style="">
+            <div id="my-timeline"></div>
+        </div>
+    </div>
+{% endblock content %}

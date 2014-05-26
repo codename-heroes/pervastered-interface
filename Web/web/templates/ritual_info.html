@@ -1,0 +1,48 @@
+<div class="header">
+    <h1 id="profile-name"><i class="fa-icon-fire"></i> {{ ritual.name }} <span class="pull-right" onclick="$('#general-content').addClass('animated fadeOutRightBig');window.setTimeout( function(){$('#general-content').removeClass('animated fadeOutRightBig').css('display','none');},1000);">x</span></h1>
+    <div class="date"><strong>[ {{ ritual.id }} ]</strong></div>
+    <div class="from">
+        {% if ritual.owner_id != "#0" %}<span onclick="Show('{{ ritual.owner_id }}');"><i class="fa-icon-user"></i> {{ ritual.owner_name}}<br></span>{% endif %}
+        {% if ritual.last_known_location %}<i class="fa-icon-globe"></i> <span  id="location-{{ ritual.id|cut:"#"}}" data-latitude="{{ ritual.last_known_location.latitude }}" data-longitude="{{ ritual.last_known_location.longitude }}"></span><span id="location-auto-load" data-latitude="{{ ritual.last_known_location.latitude }}" data-longitude="{{ ritual.last_known_location.longitude }}" >[{{ ritual.last_known_location.latitude }},{{ ritual.last_known_location.longitude }}]</span>{% endif %}
+    </div>
+    <div class="menu"></div>
+</div>
+<div class="content" style="margin-top: -50px;">
+    <div class="span12 row">
+        <div class="box span12">
+            <div class="box-header">
+                <h2>
+                    Information
+                </h2>
+            </div>
+            <div class="box-content" style="min-height:300px">
+                <ul class="nav tab-menu nav-tabs" id="myTab" >
+                    {% if ritual.messages %}<li class><a href="#profile-messages"><i class="halflings-icon envelope"></i> </a></li>{% endif %}
+                    <li class><a href="#profile-info"><i class="halflings-icon info-sign"></i> </a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content" style="height:300px">
+                    <div class="tab-pane" id="profile-info" style="text-align:justify; margin-right: 5px">
+                        <i class="fa-icon-caret-right"></i> <i> Description: </i><br><br>
+                                <span>The graveyards in Alterac Valley are prized territories. Both the Horde and the Alliance fight savagely for these sacred grounds. Are you, <name>, ready to join that fight?
+
+                                    I want you to assault an enemy graveyard. Find a graveyard with a Horde banner in its midst, and pull it from the ground! Do that, and your task will be complete....
+
+                                    But if you can also hold the graveyard for a few minutes, then our troops will soon come to relieve you.</span><br><br>
+                    </div>
+                    <div class="tab-pane" id="profile-messages" style="text-align:justify; margin-right: 5px">
+                        <ul class="dashboard-list">
+                            {% for message in ritual.messages %}
+                                {% include "includes/message_summary.html" with message=message %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span12 row noMarginLeft">
+        {% include "comments.html" with id=ritual.id name=ritual.name %}
+    </div>
+</div>
+
+

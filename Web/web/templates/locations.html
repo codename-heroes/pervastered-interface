@@ -1,0 +1,133 @@
+{% extends "includes/base.html" %}
+{% block additionaljavascript %}
+    {% include "includes/map.html" %}
+    {% include "includes/timeline.html" %}
+    <script src="/static/tardisJS/tardis.js"></script>
+    <script>
+        function Show(id) {
+            var playerContent = $("#general-content");
+            playerContent.toggleClass("loading", true).removeClass("fadeInRightBig");
+
+            if (playerContent.css("display") != "none") {
+                playerContent.addClass("animated fadeOutRightBig");
+            }
+
+
+            var located = $("#location-"+id.replace("#",""));
+            if (located.length > 0) {
+                tardis.setView(id, [located.data("latitude"), located.data("longitude")]);
+            }
+
+            window.setTimeout( function(){
+                var playerContent = $('#general-content');
+
+                if (playerContent.hasClass("fadeOutRightBig")) {
+                    playerContent.removeClass("fadeOutRightBig");
+
+                    if (playerContent.hasClass("loading")) playerContent.css("display","none");
+                    else {
+                        playerContent.addClass("animated fadeInRightBig");
+                        var wait = window.setTimeout( function(){$('#general-content').removeClass("animated fadeInRightBig")},1000);
+                    }
+                }
+            },800);
+
+
+            var request = $.ajax({
+                url: "/api/"+id.replace("#","%23"),
+                type: "get"
+            });
+
+            request.done(function (response, textStatus, jqXHR){
+                // log a message to the console
+                LoadGeneral(response);
+                AutoLoadLocation();
+            });
+
+            request.fail(function (jqXHR, textStatus, errorThrown){
+                // log the error to the console
+                console.log(
+                        "The following error occured: "+
+                                textStatus, errorThrown
+                );
+            });
+
+            request.always(function () {
+            });
+        };
+
+        function LoadGeneral(player) {
+            var playerContent = $("#general-content");
+            playerContent.html(player).toggleClass("loading", false);
+
+            if (playerContent.css("display") != "") {
+                playerContent.css('display', '').removeClass("fadeOutRightBig").addClass("animated fadeInRightBig");
+                var wait = window.setTimeout( function(){$('#general-content').removeClass("animated fadeInRightBig")},1000);
+            }
+            var questJSON = $("#quest-visualization");
+            if (questJSON.length > 0) {
+                LoadQuestVisualization(questJSON.data("json-visualization"));
+            }
+
+            /* ---------- Tabs ---------- */
+            $('#myTab a:last').tab('show');
+            $('#myTab a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+            /* ---------- Circles ---------- */
+            circle_progess();
+        };
+
+
+
+        google.load("visualization", "1");
+        var tardis;
+        // Set callback to run when API is loaded
+        google.setOnLoadCallback(init);
+
+        function init() {
+            tardis = new links.Tardis();
+        }
+
+        /*function server_polling() {
+
+            var request = $.ajax({
+                url: "/api/json/get",
+                type: "get"
+            });
+
+            request.done(function (response, textStatus, jqXHR){
+                // log a message to the console
+                object.attr("title", response["results"][0]["formatted_address"]);
+                object.data("geo-located", "1");
+            });
+
+            request.fail(function (jqXHR, textStatus, errorThrown){
+                // log the error to the console
+                console.log(
+                        "The following error occured: "+
+                                textStatus, errorThrown
+                );
+                object.data("geo-located", "");
+            });
+
+            request.always(function () {
+            });
+        }*/
+    </script>
+{% endblock additionaljavascript %}
+{% block content %}
+<div class="row-fluid ">
+    <div id="map-container" class="span10">
+        <div id="map" style="height:770px"></div>
+    </div>
+    <div class="span3"  style=" margin-top:-518px;margin-right:-250px;float:right;width:770px;-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-ms-transform:rotate(90deg);">
+        <div id="mytimeline" style="height:100%; width:100%"></div>
+    </div>
+    <div id="general-content" class="message dark offset6 span4" style="float:left;position: absolute; margin-top:20px;display: none; z-index:1000;height:808px">
+    </div>
+    <span id="init-data" data-json='{{ json_raw }}'></span>
+</div>
+
+{% endblock content %}

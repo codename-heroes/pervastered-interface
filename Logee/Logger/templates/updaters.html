@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block additionaljavascript %}
+
+{% endblock additionaljavascript %}
+{% block content %}
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Namespace</th>
+            <th>Errors</th>
+            <th>Edit</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for updater in updaters %}
+                <tr>
+                    <td>{{ updater.name}}</td>
+                    <td>{{ updater.namespace.name}}</td>
+                    <td>0</td>
+                    <td><a href="/updaters/edit/{{updater.id}}"><button class="btn btn-primary" >Edit</button></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}

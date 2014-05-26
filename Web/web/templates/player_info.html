@@ -1,0 +1,93 @@
+{% load timetags %}
+<div class="header">
+    <h1 id="profile-name"><i class="fa-icon-user"></i> {{ player.name }} <span class="pull-right" onclick="$('#general-content').addClass('animated fadeOutRightBig');window.setTimeout( function(){$('#general-content').removeClass('animated fadeOutRightBig').css('display','none');},1000);">x</span></h1>
+    <div class="date"><strong>[ {{ player.id }} ]</strong> </div>
+    <div class="from"><i class="halflings-icon time"></i> {{ player.last_connect_time|print_timestamp|date:"f, d M. o"}}<br>
+        {% if player.last_known_location.latitude != "" %}<i class="fa-icon-globe"></i>  <span  id="location-{{ player.id|cut:"#"}}" data-latitude="{{ player.last_known_location.latitude }}" data-longitude="{{ player.last_known_location.longitude }}"><span id="location-auto-load" data-latitude="{{ player.last_known_location.latitude }}" data-longitude="{{ player.last_known_location.longitude }}" >[{{ player.last_known_location.latitude }},{{ player.last_known_location.longitude }}]</span>{% endif %}
+    </div>
+    <div class="menu"></div>
+</div>
+<div class="content" style="margin-top: -50px;">
+    <div class="span12 row">
+        <div class="box span12">
+            <div class="box-header">
+                <h2>
+                    Information
+                </h2>
+            </div>
+            <div class="box-content" style="min-height:300px">
+                <ul class="nav tab-menu nav-tabs" id="myTab" >
+                    {% if player.rituals|length > 0 %}<li class="tab-button profile-rituals"><a href="#profile-rituals"><i class="fa-icon-fire"></i> </a></li>{% endif %}
+                    {% if player.messages|length > 0 %}<li class="tab-button profile-messages"><a href="#profile-messages"><i class="halflings-icon envelope"></i> </a></li>{% endif %}
+                    {% if player.quests|length > 0 %}<li class="tab-button profile-quests"><a href="#profile-quests"><i class="fa-icon-book"></i> </a></li>{% endif %}
+                    <li class="tab-button profile-info"><a href="#profile-info"><i class="fa-icon-info-sign"></i> </a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content" style="height:300px">
+                    <div class="tab-pane" id="profile-info" style="text-align:justify; margin-right: 5px">
+                        <div id="buttonInfo" class="row-fluid span11" style="margin-left:15px !important; margin-top:30px">
+                            <a class="quick-button-small span3">
+                                {% if player.team == "heart_player" %} <i class="fa-icon-heart"></i>{% elif player.team == "hand_player" %}<i class="fa-icon-thumbs-up"></i>{% elif player.team == "head_player" %}<i class="fa-icon-cloud"></i>{% else %}<i class="fa-icon-question-sign"></i>{% endif %}
+                                <p>{{ player.experience }}</p>
+                            </a>
+                            <a class="quick-button-small span3" href="#profile-quests">
+                                <i class="fa-icon-book"></i>
+                                <p>{{ player.quests|length }}</p>
+                            </a>
+                            <a class="quick-button-small span3" href="#profile-messages">
+                                <i class="fa-icon-envelope"></i>
+                                <p>{{ player.messages|length }}</p>
+                            </a>
+                            <a class="quick-button-small span3" href="#profile-rituals">
+                                <i class="fa-icon-fire"></i>
+                                <p> {{ player.rituals|length }}</p>
+                            </a>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="row-fluid span11 " style="margin-top:20px">
+                            <div class="span4">
+                                <div class="circleStatsItem blue">
+                                    <i class="fa-icon-cloud"></i>
+                                    <input type="text" value="{{ player.blue_mana }}" class="blueCircle" />
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="circleStatsItem red">
+                                    <i class="fa-icon-heart"></i>
+                                    <input type="text" value="{{ player.red_mana }}" class="orangeCircle" />
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="circleStatsItem yellow">
+                                    <i class="fa-icon-thumbs-up"></i>
+                                    <input type="text" value="{{ player.green_mana }}" class="yellowCircle" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="profile-messages" style="text-align:justify; margin-right: 5px">
+                        <ul class="dashboard-list">
+                            {% for message in player.messages %}
+                                {% include "includes/message_summary.html" with message=message section="-specific" %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="tab-pane" id="profile-rituals">
+                        {% for ritual in player.rituals %}
+                               {% include "includes/ritual_summary.html" with ritual=ritual section="-specific" %}
+                        {% endfor %}
+                    </div>
+                    <div class="tab-pane" id="profile-quests">
+                        {% for quest in player.quests %}
+                               {% include "includes/quest_summary.html" with quest=quest section="-specific" %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span12 row noMarginLeft">
+        {% include "comments.html" with id=player.id name=player.name %}
+    </div>
+</div>
+
+

@@ -1,0 +1,50 @@
+<html>
+<head>
+	<script type="text/javascript" src="../libs/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript">
+		function getURLParameter(name) {
+		  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+		}
+
+		var params = {
+			repetitions: getURLParameter("repetitions") || 1,
+			endpoint: getURLParameter("endpoint") || "players",
+			interval: getURLParameter("interval") || 5000,
+			token: getURLParameter("token") || 1234
+		};
+
+		function start() {
+			var repetitions = parseInt(params.repetitions),
+				interval = parseInt(params.interval),
+				timeout = 0;
+
+			for (var i = 0; i < repetitions; ++i) {
+				setTimeout( function() {
+					sendPetition(params.endpoint, params.token);
+				}, interval*i);
+			}
+		}
+
+		function sendPetition(endpoint, token) {
+			console.log("WHAT!");
+			$.ajax({    
+	           url: "http://ec2-46-51-150-16.eu-west-1.compute.amazonaws.com:8080/" + endpoint + "?token=" + token,
+	           cache: false,
+	           type : "GET",
+	           dataType: "json"
+	        }).done(function(response) {
+	            console.log("ok", response);
+	        }).fail(function(response) {
+	        	console.log("fail", response);
+	        });
+		}
+		console.log("FDASFASF");
+		if (getURLParameter("start")) {
+			start();
+		}
+	</script>
+</head>
+<body>
+	<input type="button" value="Start test" onclick="start();">
+</body>
+</html>

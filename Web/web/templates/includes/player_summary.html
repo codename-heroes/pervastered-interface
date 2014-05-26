@@ -1,0 +1,22 @@
+{% load timetags %}
+<div id="{{ player.id }}" class="task visible result player-summary {% if player.fake_player == "1" %}medium npc{% else %}low player{% endif %} id-{{ player.id }}" onclick="Show(this.id);"
+     data-search-term="{{ player.id }} {{ player.name }} {{ player.team }} {% if player.quests_count != "0" %}quests{% endif %} {% if player.messages_decoded != "0" %}read-messages{% endif %} {% if player.messages_coded != "0" %}unread-messages{% endif %} {% if player.available_rituals != "0" %}rituals{% endif %} {% if player.last_known_location.longitude != "" %}located{% endif %}">
+    <div class="desc" style="width:55% !important;">
+        <div class="player-summary title" title="{{ player.id }}">{{ player.name }}</div>
+
+            <i class="halflings-icon {% if player.fake_player == "1" %}lock{% else %}user{% endif %}"> </i>
+            {% if player.team == "heart_player" %} <i class="fa-icon-heart"></i>{% elif player.team == "hand_player" %}<i class="fa-icon-thumbs-up"></i>{% elif player.team == "head_player" %}<i class="fa-icon-cloud"></i>{% else %}<i class="fa-icon-question-sign"></i>{% endif %} {{ player.experience }} exp
+            {% if player.messages_decoded != "0" %}<i class="halflings-icon list-alt"> </i> {{ player.messages_decoded }}{% endif %}
+            {% if player.messages_coded != "0" %}<i class="halflings-icon envelope"> </i> {{ player.messages_coded }}{% endif %}
+            {% if player.available_rituals != "0" %}<i class="fa-icon-fire"> </i> {{ player.available_rituals }}{% endif %}
+            {% if player.quests_count != "0" %}<i class="fa-icon-book"> </i> {{ player.quests_count }}{% endif %}
+            {% if player.last_known_location.longitude != "" %}<span id="location-{{ player.id|cut:"#"}}" onmouseover="LoadLocation(this);" data-longitude="{{ player.last_known_location.longitude }}" data-latitude="{{ player.last_known_location.latitude }}" title="[{{ player.last_known_location.longitude }},{{ player.last_known_location.latitude }}]"><i class="fa-icon-globe"> </i> </span>{% endif %}
+        <br>
+        <span class="label label-info">{{ player.blue_mana|floatformat:2}}</span> <span class="label label-important">{{ player.red_mana|floatformat:2}}</span> <span class="label label-yellow">{{ player.green_mana|floatformat:2 }}</span>
+
+    </div>
+    <div class="time" style="width:35% !important;">
+        <div class="date" style="font-size:14px !important;">{{ player.last_connect_time|print_timestamp|date:"f, d M. o"}}</div>
+        <div>{{ player.last_connect_time|print_timestamp|timesince}}</div>
+    </div>
+</div>

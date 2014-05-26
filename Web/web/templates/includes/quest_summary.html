@@ -1,0 +1,8 @@
+{% load timetags %}
+<div id="{{ quest.id }}" class="task visible result quest-summary id-{{ quest.id }}" onclick="Show(this.id);"
+     data-search-term="{{ quest.id }} {{ quest.name }}">
+    <div class="desc" style="width:55% !important;">
+        <div class="quest-summary title" title="{{ quest.id }}">{{ quest.name }}</div>
+        <i class="fa-icon-group"></i> {{ quest.players }} <i class="fa-icon-reorder"></i> {{ quest.sub_quests }}
+    </div>
+</div>

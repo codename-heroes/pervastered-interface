@@ -1,0 +1,160 @@
+<html>
+<body>
+<head>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />
+    <![endif]-->
+    <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
+
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script src="js/jquery-ui-1.8.21.custom.min.js"></script>
+    <script src="js/modernizr.js"></script>
+    <script src="js/bootstrap.js"></script>
+</head>
+<script >
+    $(document).ready(function(){
+    var redIcon = L.icon({
+        iconUrl:"/img/marker-player-red.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+    var blueIcon = L.icon({
+        iconUrl:"/img/marker-player-blue.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+    var yellowIcon = L.icon({
+        iconUrl:"/img/marker-player-yellow.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+    var redObjectIcon = L.icon({
+        iconUrl:"/img/marker-object-red.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+    var blueObjectIcon = L.icon({
+        iconUrl:"/img/marker-object-blue.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+    var yellowObjectIcon = L.icon({
+        iconUrl:"/img/marker-object-yellow.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+    var npcIcon = L.icon({
+        iconUrl:"/img/marker-npc.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+    var messageIcon = L.icon({
+        iconUrl:"/img/marker-messages.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+    var manawellIcon = L.icon({
+        iconUrl:"/img/marker-mana-well.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+    var dropboxIcon = L.icon({
+        iconUrl:"/img/marker-dropbox.png",
+        shadowUrl:"/img/marker-shadow.png",
+        iconSize:     [25, 41], // size of the icon
+        shadowSize:   [41, 41], // size of the shadow
+        iconAnchor:   [12, 0], // point of the icon which will correspond to marker's location
+        shadowAnchor: [12, 0],  // the same for the shadow
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var message1 = L.marker([59.329444, 18.068611], {icon:messageIcon}).bindPopup("This is message1"),
+            message2 = L.marker([59.329444, 18.088611], {icon:messageIcon}).bindPopup("This is message2"),
+            message3 = L.marker([59.349444, 18.068611], {icon:messageIcon}).bindPopup("This is message3"),
+            message4 = L.marker([59.349444, 18.088611], {icon:messageIcon}).bindPopup("This is message4"),
+            mana_well1 = L.marker([59.329444, 18.168611], {icon:manawellIcon}).bindPopup("This is mana_well1"),
+            mana_well2 = L.marker([59.339444, 18.078611], {icon:manawellIcon}).bindPopup("This is mana_well2"),
+            player1 = L.marker([59.429444, 18.068611], {icon:redIcon}).bindPopup("This is Victor"),
+            player2 = L.marker([59.329444, 18.168611], {icon:yellowIcon}).bindPopup("This is Elena"),
+            player3 = L.marker([59.329444, 18.368611], {icon:blueIcon}).bindPopup("This is David"),
+            dropbox1 = L.marker([59.349444, 18.268611], {icon:dropboxIcon}).bindPopup("This is dropbox1"),
+            dropbox2 = L.marker([59.429444, 18.168611], {icon:dropboxIcon}).bindPopup("This is dropbox2"),
+            object1 = L.marker([59.319444, 18.098611], {icon:redObjectIcon}).bindPopup("This is NPC1"),
+            NPC2 = L.marker([59.309444, 18.038611], {icon:npcIcon}).bindPopup("This is NPC2"),
+            mana_well3 = L.marker([59.319444, 18.028611], {icon:manawellIcon}).bindPopup("This is mana_well3");
+
+    var messages   = L.layerGroup([message1, message2, message3, message4]),
+            players  = L.layerGroup([player1, player2, player3]),
+            objects = L.layerGroup([object1]),
+            mana_wells = L.layerGroup([mana_well1, mana_well2, mana_well3]),
+            npcs = L.layerGroup([NPC2]);
+    dropboxs = L.layerGroup([dropbox1, dropbox2]);
+
+
+
+
+    var map = L.map('map', {
+        layers : [messages, players, objects, mana_wells, npcs],
+    }).setView([59.329444, 18.068611], 13);
+
+
+    // add an OpenStreetMap tile layer
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    //$("#map").height($())
+
+    var overlayMaps = {
+        "Messages":messages,
+        "Players": players,
+        "Objects": objects,
+        "Mana wells": mana_wells,
+        "NPCs": npcs,
+        "Dropboxs": dropboxs
+    };
+    L.control.layers(null,overlayMaps).addTo(map);
+});
+</script>
+<div class="row-fluid ">
+    <div id="map" style="height:500px;margin-left:0px;margin-top:30px" class="span12"></div>
+</div>
+</body>
+</html>

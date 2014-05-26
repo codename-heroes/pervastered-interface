@@ -1,0 +1,44 @@
+<script>
+    function LoadLocation(object) {
+        var object = $(object);
+        if (object.data("geo-located")) return;
+        object.data("geo-located", "0");
+        console.log(object.data("latitutde") + " " + object.data("longitude"));
+        var request = $.ajax({
+            url: "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ object.data("latitude") +","+ object.data("longitude")+"&sensor=false",
+            type: "get"
+        });
+
+        request.done(function (response, textStatus, jqXHR){
+            // log a message to the console
+            object.attr("title", response["results"][1]["formatted_address"]);
+            object.data("geo-located", "1");
+        });
+
+        request.fail(function (jqXHR, textStatus, errorThrown){
+            // log the error to the console
+            console.log(
+                    "The following error occured: "+
+                            textStatus, errorThrown
+            );
+            object.data("geo-located", "");
+        });
+
+        request.always(function () {
+        });
+    }
+    function AutoLoadLocation() {
+        var object = $("#location-auto-load");
+        if (object) {
+            var request = $.ajax({
+                url: "http://maps.googleapis.com/maps/api/geocode/json?latlng="+ object.data("latitude") +","+ object.data("longitude")+"&sensor=false",
+                type: "get"
+            });
+
+            request.done(function (response, textStatus, jqXHR){
+                // log a message to the console
+                object.html(response["results"][1]["formatted_address"]);
+            });
+        }
+    }
+</script>

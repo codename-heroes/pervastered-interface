@@ -1,0 +1,83 @@
+{% extends "includes/base.html" %}
+{% block additionaljavascript %}
+
+{% endblock additionaljavascript %}
+{% block content %}
+    <div class="row-fluid sort">
+        <div class="box span4" onTablet="span6" onDesktop="span4">
+            <div class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>User Activity</h2>
+                <div class="box-icon">
+                    <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+                    <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+                </div>
+            </div>
+            <div class="box-content">
+                <ul class="dashboard-list">
+                    <li>
+                        <a href="#">
+                            <img class="avatar" alt="Victor Guerrero" src="img/victor_avatar.jpg">
+                        </a>
+                        <strong>Name:</strong> <a href="#">Victor Guerrero</a><br>
+                        <strong>Date:</strong> Jul 25, 2012 11:09<br>
+                        <strong>Status:</strong> Delivered <b><i class="fa-icon-file-alt"></i> The hand</b> to <b><i class="fa-icon-map-marker"></i> T-Centralen</b>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img class="avatar" alt="Elena Marquez" src="img/elena_avatar.jpg">
+                        </a>
+                        <strong>Name:</strong> <a href="#">Elena Marquez</a><br>
+                        <strong>Date:</strong> Jul 25, 2012 11:09<br>
+                        <strong>Status:</strong> Supered <b><i class="fa-icon-book"></i> Mogu trap</b>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img class="avatar" alt="Kim Nevelsteen" src="img/kim_avatar.jpg">
+                        </a>
+                        <strong>Name:</strong> <a href="#">Kim Nevelsteen</a><br>
+                        <strong>Date:</strong> Jul 25, 2012 11:09<br>
+                        <strong>Status:</strong> Picked up  <b><i class="fa-icon-envelope"></i> Criper</b>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img class="avatar" alt="Kate" src="img/david_avatar.jpg">
+                        </a>
+                        <strong>Name:</strong> <a href="#">David Lopez</a><br>
+                        <strong>Date:</strong> Jul 25, 2012 11:09<br>
+                        <strong>Status:</strong> Started <b><i class="fa-icon-book"></i> Mogu trap</b>
+                    </li>
+                </ul>
+            </div>
+            <div class="row-fluid">
+                <div class="todo noMargin" onTablet="span12" onDesktop="span4" height="755px" style="margin-top:20px;">
+                    <a class="twitter-timeline box" height="355px" href="https://twitter.com/search?q=%23larp" data-widget-id="319141590008467456">Tweets about "#larp"</a>
+                    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                </div>
+            </div>
+        </div><!--/span-->
+        <div class="box span8" onTablet="span6" onDesktop="span8" style="height: 720px !important">
+            <div id="disqus_thread" style="height: 720px !important; overflow-y: auto"></div>
+            <script type="text/javascript">
+                /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                var disqus_shortname = 'codenameheroes'; // required: replace example with your forum shortname
+                var disqus_identifier= 'codenameheroes0';
+                var disqus_url = 'http://localhost:8000/0';
+                var disqus_title = "General topic";
+                /* * * DON'T EDIT BELOW THIS LINE * * */
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+            <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+        </div><!--/span-->
+
+
+    </div>
+
+
+
+{% endblock content %}

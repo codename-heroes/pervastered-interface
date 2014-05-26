@@ -1,0 +1,1 @@
+NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin python ./manage.py runfcgi host=127.0.0.1 port=8000

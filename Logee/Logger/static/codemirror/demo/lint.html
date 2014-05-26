@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>CodeMirror: Linter Demo2</title>
+    <link rel="stylesheet" href="../lib/codemirror.css">
+    <script src="../lib/codemirror.js"></script>
+    <script src="../mode/javascript/javascript.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>
+    <script src="https://raw.github.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js"></script>
+    <link rel="stylesheet" href="../doc/docs.css">
+    <link rel="stylesheet" href="../addon/lint/lint.css">
+    <link rel="stylesheet" href="../addon/hint/show-hint.css">
+    <script src="../addon/hint/javascript-hint.js"></script>
+    <script src="../addon/lint/lint.js"></script>
+    <script src="../addon/lint/javascript-lint.js"></script>
+    <script src="../addon/selection/active-line.js"></script>
+    <script src="../addon/lint/json-lint.js"></script>
+
+    <style type="text/css">
+      .CodeMirror {border: 1px solid black;}
+    </style>
+  </head>
+  <body>
+    <h1>CodeMirror: Linter Demo2</h1>
+
+
+    <p><textarea id="code-js">
+
+    </textarea></p>
+
+    <p><textarea id="code-json">[
+
+    </textarea></p>
+
+  <script>
+    var delay;
+    var json_text = document.getElementById("code-json");
+    var editor = CodeMirror.fromTextArea(document.getElementById("code-js"), {
+      lineNumbers: true,
+      lineWrapping: true,
+      mode: "javascript",
+      gutters: ["CodeMirror-lint-markers"],
+      lintWith: CodeMirror.javascriptValidator,
+      closeBrackets : true,
+      autoCloseBrackets: true,
+      styleActiveLine: true,
+    });
+
+    editor.on("change", function() {
+      clearTimeout(delay);
+      delay = setTimeout(updatePreview, 300);
+    });
+
+    function updatePreview() {
+      console.log(editor.getValue());
+      try {
+        editor_json.setValue(JSON.stringify(new Function(editor.getValue())(), null, '\t'));
+      } catch (err) {
+         console.log(err);
+      }
+    }
+
+    setTimeout(updatePreview, 300);
+
+    var editor_json = CodeMirror.fromTextArea(document.getElementById("code-json"), {
+      lineNumbers: true,
+      lineWrapping: true,
+      mode: "application/json",
+      gutters: ["CodeMirror-lint-markers"],
+      lintWith: CodeMirror.jsonValidator,
+      extraKeys: {"Ctrl-Space": "autocomplete"},
+
+    });
+  </script>
+
+  </body>
+</html>

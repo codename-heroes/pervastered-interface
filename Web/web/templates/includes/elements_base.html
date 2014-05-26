@@ -1,0 +1,147 @@
+{% extends "includes/base.html" %}
+{% block additionaljavascript %}
+    {% include "includes/map.html" %}
+    <script>
+        $(window).ready(function() {
+            $(".chzn-select.general-filter").chosen().change(function() {
+                FilterTags(undefined,$(this).val());
+            });
+        });
+
+        function Search() {
+            var search_term = $("#prependedInputButton").val();
+            if (search_term != "") {
+                $(".{{ element }}-summary").filter(function() {
+                    var data = $(this).data("search-term");
+                    if (data) {
+                        return data.indexOf(search_term) < 0;
+                    } else return false;
+                }).toggleClass("result", false).hide();
+                $(".{{ element }}-summary").filter(function() {
+                    var data = $(this).data("search-term");
+                    if (data) {
+                        return data.indexOf(search_term) >= 0;
+                    } else return false;
+                }).toggleClass("result", true).filter(".visible").show();
+            } else {
+                $(".{{ element }}-summary").filter(".visible").toggleClass("result", true).show();
+            }
+            $()
+        };
+
+        function Show(id) {
+            var playerContent = $("#general-content");
+            playerContent.toggleClass("loading", true).removeClass("fadeInRightBig");
+
+            if (playerContent.css("display") != "none") {
+                playerContent.addClass("animated fadeOutRightBig");
+                playerContent.filter("#disqus_thread").html("");
+            }
+
+
+            var located = $("#location-"+id.replace("#",""));
+            if (located.length > 0) {
+                tardis.setView(id, [located.data("latitude"), located.data("longitude")]);
+            }
+
+            window.setTimeout( function(){
+                var playerContent = $('#general-content');
+
+                if (playerContent.hasClass("fadeOutRightBig")) {
+                    playerContent.removeClass("fadeOutRightBig");
+
+                    if (playerContent.hasClass("loading")) playerContent.css("display","none");
+                    else {
+                        playerContent.addClass("animated fadeInRightBig");
+                        var wait = window.setTimeout( function(){$('#general-content').removeClass("animated fadeInRightBig")},1000);
+                    }
+                }
+            },800);
+
+
+            var request = $.ajax({
+                url: "/api/"+id.replace("#","%23"),
+                type: "get"
+            });
+
+            request.done(function (response, textStatus, jqXHR){
+                // log a message to the console
+                LoadGeneral(response);
+                AutoLoadLocation();
+            });
+
+            request.fail(function (jqXHR, textStatus, errorThrown){
+                // log the error to the console
+                console.log(
+                        "The following error occured: "+
+                                textStatus, errorThrown
+                );
+            });
+
+            request.always(function () {
+            });
+        };
+
+        function LoadGeneral(player) {
+            var playerContent = $("#general-content");
+            playerContent.html(player).toggleClass("loading", false);
+
+            if (playerContent.css("display") != "") {
+                playerContent.css('display', '').removeClass("fadeOutRightBig").addClass("animated fadeInRightBig");
+                var wait = window.setTimeout( function(){$('#general-content').removeClass("animated fadeInRightBig")},1000);
+            }
+            var questJSON = $("#quest-visualization");
+            if (questJSON.length > 0) {
+                LoadQuestVisualization(questJSON.data("json-visualization"));
+            }
+
+            /* ---------- Tabs ---------- */
+            $('#myTab a:last').tab('show');
+            $('#myTab a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+            $('#buttonInfo a').click(function (e) {
+                e.preventDefault();
+
+                var tabButton = $(".tab-button."+this.getAttribute("href").substr(1));
+                if (tabButton.length > 0) {
+                    $(".tab-button").toggleClass("active", false);
+                    tabButton.toggleClass("active");
+                    $(this).tab('show');
+                }
+
+            });
+            /* ---------- Circles ---------- */
+            circle_progess();
+        };
+
+        function Filter(obj,id) {
+            $(obj).toggleClass('active disabled');
+            $(id).filter(".result").toggle().toggleClass("visible");
+        };
+
+        function FilterTags(obj,id) {
+            var allFilters = $(".chzn-select.general-filter").children().map(function() {return $(this).val();}).get();
+            var difference = $.grep(allFilters, function (a) { return $.inArray(a,id) < 0});
+            $(".message-summary.div").filter(".result").toggle(true).toggleClass("visible", true);
+            for (var i in difference) {
+                $(difference[i]).filter(".result").toggle(false).toggleClass("visible", false);
+            }
+        };
+    </script>
+{% endblock additionaljavascript %}
+{% block content %}
+    <div class="row-fluid">
+        <div class="span4 ">
+            {% include element_base with elements=elements json_raw=json_raw %}
+        </div>
+        <div class="span8 offset1 noMarginLeft" style="position: relative;">
+            <div class="player-map span12 dark" style="float:left;position:absolute;">
+                {% include "includes/map_plugin.html" %}
+            </div>
+            <div id="general-content" class="message dark offset6 span6" style="float:left;position: absolute; display: none; z-index:1000;height:808px">
+            </div>
+        </div>
+    </div>
+{% endblock content %}

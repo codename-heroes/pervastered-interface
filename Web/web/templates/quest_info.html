@@ -1,0 +1,51 @@
+<div class="header">
+    <h1 id="profile-name"><i class="fa-icon-book"></i> {{ quest.name }} <span class="pull-right" onclick="$('#general-content').addClass('animated fadeOutRightBig');window.setTimeout( function(){$('#general-content').removeClass('animated fadeOutRightBig').css('display','none');},1000);">x</span></h1>
+    <div class="date"><strong>[ {{ quest.id }} ]</strong> </div>
+    <div class="menu"></div>
+</div>
+<div class="content" style="margin-top: -50px;">
+    <div class="span12 row">
+        <div class="box span12">
+            <div class="box-header">
+                <h2>
+                    Information
+                </h2>
+            </div>
+            <div class="box-content" style="min-height:300px">
+                <ul class="nav tab-menu nav-tabs" id="myTab" >
+                    <li class><a href="#profile-groups"><i class="fa-icon-group"></i> </a></li>
+                    <li class><a href="#profile-info"><i class="fa-icon-info-sign"></i> </a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content" style="height:300px">
+                    <div class="tab-pane" id="profile-info" style="text-align:justify; margin-right: 5px">
+                        <div id="quest-visualization" data-json-visualization='{{ quest.json_visualization }}'></div>
+                    </div>
+                    <div class="tab-pane" id="profile-groups" style="text-align:justify; margin-right: 5px">
+                        <select id="quest-select-subquest" onchange="if ($(this).val() != 'all') {$('.quest-player').hide();$('.'+$(this).val()).show();} else {$('.quest-player').show();}">
+                            <option>all</option>
+                            {% for subquest in quest.quest_structure %}
+                                <option>{{ subquest.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <ul class="dashboard-list" id="quest-player-list">
+                            {% for subquest in quest.quest_structure %}
+                                {% for group in subquest.player_list %}
+                                    {% for player in group.members %}
+                                        <div class="quest-player {{ subquest.name }}">
+                                        {% include "includes/player_summary.html" with player=player section="quest" %}
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span12 row noMarginLeft">
+        {% include "comments.html" with id=quest.id name=quest.name %}
+    </div>
+</div>
+
+

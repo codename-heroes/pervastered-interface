@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Sign in &middot; Codename Heroes : Game master</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Le styles -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+    <link href="../assets/css/animate.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+		height:100%;
+		width:100%;
+		z-index:10;
+      }
+	  #mapdiv {
+		  width: 100%;
+		  height: 100%;
+		  margin: 0;
+	  }
+
+      .form-signin {
+        max-width: 300px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+		margin-top:220px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+           -moz-border-radius: 5px;
+                border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+           -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+                box-shadow: 0 1px 2px rgba(0,0,0,.05);
+	    -webkit-animation-delay: 0.5s;
+		-ms-animation-delay: 0.5s;
+		-moz-animation-delay:0.5s;
+      }
+      .form-signin .form-signin-heading,
+      .form-signin .checkbox {
+        margin-bottom: 10px;
+      }
+      .form-signin input[type="text"],
+      .form-signin input[type="password"],
+	  .form-signin select,
+	  .form-signin input[type="button"] {
+        font-size: 16px;
+        height: auto;
+        margin-bottom: 15px;
+        padding: 7px 9px;
+      }
+	  #button-console.out i{
+		-webkit-transform: rotate(0deg) !important;
+		-ms-transform: rotate(0deg) !important;
+		-moz-transform: rotate(0deg) !important;
+	  }
+	  #button-console i{
+		-webkit-transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+	  }
+	  .form-signin select, input[type="button"] {
+		margin-top:30px
+	  }
+	  .typeahead {
+		bottom:37px !important;
+		margin-top:0px !important;
+		top: auto !important;
+		margin-left:14px !important;
+	  }
+	  
+
+    </style>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+  </head>
+
+  <body onload="InitWebpage();">
+	<div id="logedIn-container" style="display:none">
+		<div id="warnings-container" style="position:absolute; right:0px;z-index:1200; width:200px; float:left;">
+		
+		</div>
+		<div class="navbar navbar-inverse navbar-fixed-bottom">
+		  <div class="navbar-inner">
+			<div class="container">
+			  <a class="brand" href="#" style="float:left !important;">Codename: Heroes</a>
+			  <div class="nav-collapse collapse">
+				<ul class="nav">
+				  <li id="options-warnings" onclick="$(this).toggleClass('active');"><a href="#"><i class="icon-warning-sign"> </i></a></li>
+				</ul>
+				<form class="navbar-form pull-midle" >
+				  <div id="console" class="modal" style="margin-left:-310px;position:absolute; height:800px;margin-top:-600px; z-index:-200">
+						<div class="modal-header">
+							<button class="close" onclick="webConsole.toggle(); return false;" >&times;</button>
+							<h4>Console 
+								<div id="console-filter" class="btn-group pull-right" style="margin-top:-10px;padding-right:10px">
+								</div>
+							</h4>
+							
+						</div>
+						<div class="modal-body" style="max-height: 500px !important;">
+							<div id="console-log" >
+							</div>
+						</div>
+				  </div>
+				  <input id="console-msg" autocomplete="off" class="span2" type="text" style="margin-left:20px; width:48% !important" placeholder="Send command"
+				  data-provide="typeahead" data-items="4" data-source='["help", "@who", "@lastlog", "go", "home", "@go <location>", "get", "drop", "put", "give", "say", "@move <obj> to <location>" , "look", "whereis", "@locations", "@parents", "@examine", "whisper", "emote", "@show"]'>
+				  <button id="button-console" class="btn button-console" onclick="webConsole.toggle(); return false;"> <i class="icon-chevron-up" ></i> </button>
+				  <button id="button-send-msg" class="btn btn-primary" onclick="webConsole.send(); return false;">Send</button>
+				  
+				</form>
+			  </div><!--/.nav-collapse -->
+			</div>
+		  </div>
+		  
+		</div>
+		<div id="map" style="position:absolute;height:100%; width:100%;z-index:1000">
+			<div id="mapdiv"></div>
+		</div>
+	</div>
+    <div id="signIn-container" class="container">
+		
+		<div style="position:absolute;float:left;left:0px;top:0px;width:100%;height:100%; background-image:url('rabid1.jpg'); -webkit-filter:blur(4px);"></div>
+      <form id="form-signin" class="form-signin animated flipInY" >
+		<img src="../assets/img/logoCH.png">
+        <h3 class="form-signin-heading">Please sign in</h3>
+        <input id="username" type="text" value="Yojimbo" class="input-block-level" placeholder="Username">
+        <input id="password" type="password" value="" class="input-block-level" placeholder="Password">
+		<select id="server" class="input-bloc-level" placeholder="server">
+		</select>
+        <input class="btn btn-large btn-primary" type="button" onclick="SignIn();" value="Sign in">
+      </form>
+    </div> <!-- /container -->
+	
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../assets/js/jquery-1.9.1.min.js"></script>
+    <script src="../assets/js/bootstrap.js"></script>
+    <script src="../assets/js/codename-heroes.js"></script>
+	<script src="../assets/js/OpenLayers-2.11/OpenLayers.js"></script>
+	<script src="../assets/js/socket.io/socket.io.js"></script>
+
+  </body>
+</html>

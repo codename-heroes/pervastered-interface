@@ -1,0 +1,60 @@
+<html>
+<head>
+	<script type="text/javascript" src="../libs/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript">
+		function getURLParameter(name) {
+		  return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null
+		}
+
+		var params = {
+			repetitions: getURLParameter("repetitions") || 1,
+			dateRange: [
+				getURLParameter("dateStart") || "2013-8-29 20:10:30",
+				getURLParameter("dateEnd") || "2013-9-30 6:45:48"
+			],
+			tag: getURLParameter("tag") || "Social",
+			interval: getURLParameter("interval") || 5000
+		};
+
+		function start() {
+			var repetitions = parseInt(params.repetitions),
+				interval = parseInt(params.interval),
+				timeout = 0;
+
+				console.log("fdadf");
+
+			for (var i = 0; i < repetitions; ++i) {
+				setTimeout( function() {
+					sendPetition(params.dateRange, params.tag);
+				}, interval*i);
+			}
+		}
+
+		function sendPetition(dateRange, tag) {
+			$.ajax({    
+	           url: "http://codename-heroes.com:8000/api/events",
+	           type : "POST",
+	           dataType: "json",
+	           data: JSON.stringify({ 
+	                "filter" : {
+	                    "date_range": dateRange, 
+	                    "namespace": "Codename Heroes", 
+	                    "type": tag
+	                }
+	           }),
+	        }).done(function(response) {
+	            console.log("ok", response);
+	        }).fail(function(response) {
+	        	console.log("fail", response);
+	        });
+		}
+		console.log("FDASFASF");
+		if (getURLParameter("start")) {
+			start();
+		}
+	</script>
+</head>
+<body>
+	<input type="button" value="Start test" onclick="start();">
+</body>
+</html>

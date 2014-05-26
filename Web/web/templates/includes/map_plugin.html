@@ -1,0 +1,25 @@
+{% include "includes/map.html" %}
+{% include "includes/timeline.html" %}
+<script src="/static/tardisJS/tardis.js"></script>
+<script>
+    google.load("visualization", "1");
+
+    // Set callback to run when API is loaded
+    google.setOnLoadCallback(init);
+    var tardis;
+    function init() {
+       tardis = new links.Tardis();
+    }
+
+
+
+</script>
+<div class="row-fluid ">
+
+    <div id="map-container" class="span10">
+        <div id="map" style="height:765px; width:90%"></div>
+    </div>
+    <div class="span3"  style=" margin-top:-518px;margin-right:-258px;float:right;width:764px;-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-ms-transform:rotate(90deg);">
+        <div id="mytimeline" style="height:100%; width:100%"></div>
+    </div>
+</div>

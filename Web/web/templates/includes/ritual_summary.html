@@ -1,0 +1,16 @@
+{% load timetags %}
+<div id="{{ ritual.id }}" class="task visible result ritual-summary {% if ritual.active == "1" %}medium inactive{% else %}low active{% endif %} id-{{ ritual.id }}" onclick="Show(this.id);"
+     data-search-term="{{ ritual.id }} {{ ritual.owner }} {{ ritual.owner_name }} {{ ritual.name }} {{ ritual.parent_name }}"    >
+    <div class="desc" style="width:55% !important;">
+        <div class="ritual-summary title" title="{{ ritual.id }}">{{ ritual.name }}</div>
+        {% if ritual.last_known_location %}<span id="location-{{ ritual.id|cut:"#"}}" onmouseover="LoadLocation(this);" data-longitude="{{ ritual.last_known_location.longitude }}" data-latitude="{{ ritual.last_known_location.latitude }}" title="[{{ ritual.last_known_location.latitude}},{{ ritual.last_known_location.longitude }}]"><i class="halflings-icon globe"></i></span>{% endif %}
+        {% if ritual.messages_count != "0" %} <i class="fa-icon-envelope"></i> {{ ritual.messages_count }}{% endif %}
+        {% if ritual.owner_id != "#0" %}<i class="fa-icon-user"></i> {{ ritual.owner_name}}{% else %}{% endif %}
+        <br><span class="label">{{ ritual.parent_name }}</span> <span class="label label-info">{{ ritual.blue_mana_generation|floatformat:2}}</span> <span class="label label-important">{{ ritual.red_mana_generation|floatformat:2}}</span> <span class="label label-yellow">{{ ritual.green_mana_generation|floatformat:2 }}</span>
+
+        
+    </div>
+    <div class="time" style="width:35% !important;">
+        <div>{{ ritual.activity_time|print_timestamp|date:"f, d M. o"}}</div>
+    </div>
+</div>

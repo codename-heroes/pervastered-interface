@@ -1,0 +1,17 @@
+<div >
+    <div class="input-prepend">
+        <span class="add-on"><i class="halflings-icon search"></i></span>
+        <input class="span8" onchange="Search();"  oninput="this.onchange();" id="prependedInputButton" type="text" >
+    </div>
+    <p class="btn-group">
+        <button class="btn btn-success active ritual-filter-ritual" onclick="Filter(this,'.ritual-summary.active');"><i class="halflings-icon ok" ></i></button>
+        <button class="btn btn-warning active ritual-filter-npc" onclick="Filter(this,'.ritual-summary.inactive');"><i class="halflings-icon remove"></i></button>
+    </p>
+</div>
+<div style="height:720px;overflow-y: auto">
+    {% for ritual in elements %}
+        {% include "includes/ritual_summary.html" with ritual=ritual %}
+    {% endfor %}
+</div>
+<span id="init-data" data-json='{{ json_raw }}'></span>
+<div class="clearfix"></div>

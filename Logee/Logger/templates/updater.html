@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+{% block additionalcss %}
+    <link rel="stylesheet" href="/static/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="/static/codemirror/addon/lint/lint.css">
+    <link rel="stylesheet" href="/static/codemirror/theme/ambiance.css">
+    <link rel="stylesheet" href="/static/codemirror/theme/neat.css">
+    <link rel="stylesheet" href="/static/codemirror/theme/neat2.css">
+    <style type="text/css">
+        .CodeMirror {border: 1px solid black;}
+        .CodeMirror span {
+            float:none !important;
+            margin-left: 0px !important;
+        }
+        .CodeMirror.cm-s-neat {
+            min-height: 600px
+        }
+        .CodeMirror.cm-s-neat2 {
+            height: 546px
+        }
+    </style>
+{% endblock additionalcss %}
+{% block additionaljavascript %}
+    <script src="/static/codemirror/lib/codemirror.js"></script>
+    <script src="/static/codemirror/mode/javascript/javascript.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js"></script>
+    <script src="/static/js/vendor/jsonlint.js"></script>
+
+    <script src="/static/codemirror/addon/hint/javascript-hint.js"></script>
+    <script src="/static/codemirror/addon/hint/show-hint.js"></script>
+    <script src="/static/codemirror/addon/lint/lint.js"></script>
+    <script src="/static/codemirror/addon/edit/closebrackets.js"></script>
+    <script src="/static/codemirror/addon/lint/javascript-lint.js"></script>
+    <script src="/static/codemirror/addon/lint/json-lint.js"></script>
+
+
+    <script>
+        var delay;
+        var currentTrigger;
+        var trigger;
+        var input;
+        var custom = "";
+        var result_info = $("#result-info");
+        var input_spinner = $('#input-loading-spin');
+
+        CodeMirror.commands.autocomplete = function(cm) {
+            CodeMirror.showHint(cm, CodeMirror.javascriptHint);
+        }
+
+
+
+        var editor = CodeMirror.fromTextArea(document.getElementById("code-js"), {
+            lineNumbers: true,
+            lineWrapping: true,
+            mode: "javascript",
+            gutters: ["CodeMirror-lint-markers"],
+            lintWith: CodeMirror.javascriptValidator,
+            extraKeys: {"Ctrl-Space": "autocomplete"},
+            autoCloseBrackets: true,
+            theme : "neat"
+        });
+
+        editor.on("change", function() {
+            clearTimeout(delay);
+            delay = setTimeout(updatePreview, 300);
+        });
+
+        var code_json = CodeMirror.fromTextArea(document.getElementById("output-json"), {
+            lineNumbers: true,
+            lineWrapping: true,
+            mode: "application/json",
+            gutters: ["CodeMirror-lint-markers"],
+            lintWith: CodeMirror.jsonValidator,
+            theme : "neat2"
+        });
+
+
+
+        var input_json = $(document.getElementById("input-json"));
+
+        input_json.on("change", function() {
+            clearTimeout(delay);
+            delay = setTimeout(updatePreview, 1000);
+        });
+
+        function updatePreview() {
+            try {
+                var inputJson = "var info = JSON.parse("+ JSON.stringify($("#input-json").val()) + "); ";
+                var code = inputJson + editor.getValue() + "return "+ trigger +"(info);";
+                var result = new Function(code)();
+                code_json.setValue(JSON.stringify(result, null, '\t'));
+                console.log(result);
+                result_info.text((new Date()).toLocaleTimeString()+":[OK]");
+                result_info.attr("class", "form-actions alert-success animated shake");
+                $.ajax({
+                    url:'/api/events/validate/{{ updater.id }}',
+                    dataType : "json",
+                    data: JSON.stringify(result),
+                    type: "POST",
+                    success: (function(data) {
+                        if (data["result"] == "error") {
+                            result_info.text((new Date()).toLocaleTimeString()+":[ERROR Output JSON] "+ data["message"]);
+                            result_info.attr("class", "form-actions alert-error animated shake");
+                            window.setTimeout(function(){
+                                result_info.removeClass("shake");
+                            },500);
+                        } else {
+                            result_info.text((new Date()).toLocaleTimeString()+":[OK Output JSON] ");
+                            result_info.attr("class", "form-actions alert-success animated shake");
+                            window.setTimeout(function(){
+                                result_info.removeClass("shake");
+                            },500);
+                        }
+                    })
+                });
+                window.setTimeout(function(){
+                   result_info.removeClass("shake");
+                },500);
+            } catch (err) {
+                code_json.setValue("[ERROR] "+err);
+                result_info.text((new Date()).toLocaleTimeString()+":[ERROR] "+err);
+                result_info.attr("class", "form-actions alert-error animated shake");
+                window.setTimeout(function(){
+                    result_info.removeClass("shake");
+                },500);
+            }
+        }
+
+        selectTrigger("{{ updater.triggers.all.0.id }}");
+
+        $("#input-select").change(function(){
+            var index = this.options.selectedIndex,
+                id = this.options[index].value;
+
+            input_spinner.show();
+            if (id != "-2" && input == "-2") {
+                custom = input_json.val();
+            }
+            if (id == "-2") { // CUSTOM
+                input_json.val(custom);
+                input_json.change();
+                input_spinner.hide();
+            } else if (id == "-1") { // GRABBERS
+                $.getJSON('/api/updaters/grabbers/result/{{ updater.id }}', function(data) {
+                    input_json.val(JSON.stringify(data, null, '\t'));
+                    input_json.change();
+                    input_spinner.hide();
+                });
+            } else { // TRIGGER ERROR
+                $.getJSON('/api/trigger_errors/'+id, function(data) {
+                    input_json.val(JSON.stringify(data["context"], null, '\t'));
+                    input_json.change();
+                    input_spinner.hide();
+                });
+            }
+            input = id;
+        });
+
+        $("#trigger-select").change(function(){
+            var index = this.options.selectedIndex,
+                    id = this.options[index].value;
+        });
+
+        function selectTrigger(id) {
+            if (currentTrigger != undefined) {
+                document.getElementById("trigger"+currentTrigger).innerHTML = editor.getValue();
+            }
+            currentTrigger = id;
+            trigger = document.getElementById("trigger"+currentTrigger);
+            editor.setValue(trigger.value);
+            trigger = trigger.getAttribute("data-trigger-name");
+        }
+
+        $('#myTab a').click(function (e) {
+            e.preventDefault();
+            $(this).tab('show');
+            code_json.refresh();
+        });
+
+        setTimeout(updatePreview, 300);
+    </script>
+{% endblock additionaljavascript %}
+{% block content %}
+<h1>{{ updater.name }}</h1>
+<div class="row">
+    <div class="span6">
+        <h3>Trigger</h3>
+        <select id="trigger-select" class="span3">
+            {% for trigger in updater.triggers.all %}
+            <option value="{{ trigger.id }}">{{ trigger.name }}</option>
+            {% endfor %}
+        </select>
+        <div>
+            <p><textarea id="code-js">
+            </textarea></p>
+            {% for trigger in updater.triggers.all %}
+            <textarea class="tab-pane" id="trigger{{ trigger.id }}" data-trigger-name="{{ trigger.name }}" style="display:none">
+                {% autoescape off %}
+{{ trigger.evaluator }}
+                {% endautoescape %}
+            </textarea>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="span6">
+        <ul class="nav nav-tabs"  id="myTab">
+            <li class="active"><a href="#input">Input</a></li>
+            <li><a href="#result">Result</a></li>
+        </ul>
+        <div class="tab-content" style="height:712px">
+            <div class="tab-pane active" id="input" style="height:550px">
+                <div>
+                    <select id="input-select" class="span3">
+                        <option value="-2">Custom</option>
+                        <option value="-1">Grabbers</option>
+                        {% for error in updater.trigger_errors.all %}
+                            {% if not error.checked %}
+                            <option value="{{ error.id }}">{{ error }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <span id="input-loading-spin" class="loading" style="display: none">
+                        <div class="spinner">
+                            <div class="mask">
+                                <div class="maskedCircle"></div>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+                <p><textarea id="input-json" class="span6" style="height:500px !important;resize: none;overflow-x: scroll; ">
+                </textarea></p>
+            </div>
+            <div class="tab-pane" id="result" style="height:550px">
+                <p><textarea id="output-json" >
+                </textarea></p>
+            </div>
+
+            <div id="result-info"  class="form-actions alert-error animate">
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

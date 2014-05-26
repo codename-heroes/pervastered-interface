@@ -1,0 +1,17 @@
+<div >
+    <div class="input-prepend">
+        <span class="add-on"><i class="halflings-icon search"></i></span>
+        <input class="span8" onchange="Search();"  oninput="this.onchange();" id="prependedInputButton" type="text" >
+    </div>
+    <p class="btn-group">
+        <button class="btn btn-success active player-filter-player" onclick="Filter(this,'.player-summary.player');"><i class="halflings-icon user inverse" ></i></button>
+        <button class="btn btn-warning active player-filter-npc" onclick="Filter(this,'.player-summary.npc');"><i class="halflings-icon lock"></i></button>
+    </p>
+</div>
+<div style="overflow-y: auto;height:720px !important;" class="noMargin">
+    {% for player in elements %}
+        {% include "includes/player_summary.html" with player=player %}
+    {% endfor %}
+</div>
+<span id="init-data" data-json='{{ json_raw }}'></span>
+<div class="clearfix"></div>

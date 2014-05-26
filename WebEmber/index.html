@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- start: Meta -->
+  <meta charset="utf-8">
+  <title>Codename:Heroes game mastering dashboard</title>
+  <meta name="description" content="Codename:Heroes game mastering">
+  <meta name="author" content="Victor Guerrero">
+  <meta name="keyword" content="Codename, Dashboard, Bootstrap, Game Master, Template, Theme, Responsive, Fluid, Retina">
+  <!-- end: Meta -->
+
+  <!-- start: Mobile Specific -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- end: Mobile Specific -->
+
+
+  <!-- start: CSS -->
+  <link rel="stylesheet" href="css/normalize.css">
+  <link id="bootstrap-style" href="css/bootstrap.css" rel="stylesheet">
+  <link href="css/bootstrap-responsive.css" rel="stylesheet">
+  <link id="base-style" href="css/style.css" rel="stylesheet">
+  <link id="base-style-responsive" href="css/style-responsive.css" rel="stylesheet">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/leaflet.css" />
+  <link rel="stylesheet" type="text/css" href="css/leaflet.label.css">
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" type="text/css" href="css/timeline/timeline.css">
+  <link rel="stylesheet" type="text/css" href="css/timeline/custom.css">
+  <link rel="stylesheet" type="text/css" href="css/animate.min.css">
+
+  <!-- end: CSS -->
+
+  <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <link id="ie-style" href="css/ie.css" rel="stylesheet">
+  <![endif]-->
+  
+  <!--[if IE 9]>
+    <link id="ie9style" href="css/ie9.css" rel="stylesheet">
+  <![endif]-->
+
+  <!--[if lte IE 8]>
+    <link rel="stylesheet" href="css/leaflet.ie.css" />
+  <![endif]-->
+    
+  <!-- start: Favicon -->
+  <link rel="shortcut icon" href="img/favicon.ico">
+  <!-- end: Favicon -->
+</head>
+<body style="overflow-x : hidden !important">
+  <script type="text/x-handlebars" data-template-name="base_layout">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/home"><span>Codename:Heroes</span></a>
+                  
+          <div class="nav-no-collapse header-nav">
+            <ul class="nav pull-right">
+              <li class="dropdown hidden-phone">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                  <i class="halflings-icon white warning-sign"></i>
+                </a>
+              </li>
+              <li ><a class="btn"><i class="halflings-icon white user"></i> {{App.Auth.userEmail}}</a></li>
+            </ul>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div id="sidebar-left" class="span1">
+          <div class="nav-collapse sidebar-nav">
+            <ul class="nav nav-tabs nav-stacked main-menu">
+              {{#linkTo "index" tagName="li" href=false}}<a><i class="fa-icon-home"></i><span class="hidden-tablet"> Main</span></a>{{/linkTo}}
+              {{#linkTo "players" tagName="li" href=false}}<a><i class="fa-icon-user"></i><span class="hidden-tablet"> Players</span></a>{{/linkTo}}
+              {{#linkTo "quests" tagName="li" href=false}}<a><i class="fa-icon-book"></i><span class="hidden-tablet"> Quests</span></a>{{/linkTo}}
+              {{#linkTo "rituals" tagName="li" href=false}}<a><i class="fa-icon-fire"></i><span class="hidden-tablet"> Rituals</span></a>{{/linkTo}}
+              {{#linkTo "messages" tagName="li" href=false}}<a><i class="fa-icon-envelope"></i><span class="hidden-tablet"> Messages</span></a>{{/linkTo}}
+              {{#linkTo "general" tagName="li" href=false}}<a><i class="fa-icon-map-marker"></i><span class="hidden-tablet"> Map</span></a>{{/linkTo}}
+              <li><a {{action "signOut"}}><i class="fa-icon-lock"></i><span class="hidden-tablet"> Logout</span></a></li>
+            </ul>
+          </div>
+        </div>
+        
+        <noscript>
+          <div class="alert alert-block span11">
+            <h4 class="alert-heading">Warning!</h4>
+            <p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+          </div>
+        </noscript>
+        <div id="content" class="span11" style="min-height: 940px;">
+          {{yield}}
+        </div>
+      </div>
+          
+      <div class="modal hide fade" id="myModal">
+        {{outlet modal}}
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h3></h3>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn" data-dismiss="modal">Close</a>
+          <a href="#" class="btn btn-primary">Save changes</a>
+        </div>
+      </div>
+      
+      <div class="clearfix"></div>
+      
+      <footer>
+        <p>
+          <span style="text-align:left;float:left; padding-left:20px;">&copy; <a href="" target="_blank">Mobile Life</a> 2013</span>
+          <span class="hidden-phone" style="text-align:right;float:right; padding-right:20px">Powered by: <a href="#">Acme Dashboard</a></span>
+        </p>
+      </footer>
+    </div>
+  </script>
+  <script type="text/x-handlebars">
+    {{outlet}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="modal">
+      hola caracola
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="sign_in">
+    <div style="position:absolute;float:left;left:0px;top:0px;width:100%;height:100%; background-image:url('img/rabid1.jpg'); -webkit-filter:blur(4px);"></div>
+    <form id="form-signin" class="form-signin animated flipInY" >
+      <img src="img/logoCH.png">
+      <h3 class="form-signin-heading">Please sign in</h3>
+      <label>Email</label>
+      {{view Ember.TextField valueBinding="email" class=input-block-level}}
+      <label>Password</label>
+      {{view Ember.TextField type="password" valueBinding="password" class=input-block-level}}<br><br>
+      <button class="btn btn-large btn-signIn pull-right" {{action "signIn"}}>Sign In</button>
+    </form>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="index_layout">
+  <div class="content-wrapper">
+    {{yield}}
+  </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="sign_out">
+    <form>
+      <button>Sign Out</button>
+    </form>
+  </script>
+
+  
+
+
+  <script type="text/x-handlebars" id="index">
+    <div class="row-fluid sort">
+        <div class="box span4" onTablet="span6" onDesktop="span4">
+            <div class="box-header">
+                <h2><i class="halflings-icon user"></i><span class="break"></span>User Activity</h2>
+                <div class="box-icon">
+                    <a href="#" class="btn-minimize"><i class="halflings-icon chevron-up"></i></a>
+                    <a href="#" class="btn-close"><i class="halflings-icon remove"></i></a>
+                </div>
+            </div>
+            <div class="box-content">
+            </div>
+            <div class="row-fluid">
+                <div class="todo noMargin" onTablet="span12" onDesktop="span4" height="755px" style="margin-top:20px;">
+                    <a class="twitter-timeline box" height="355px" href="https://twitter.com/search?q=%23larp" data-widget-id="319141590008467456">Tweets about "#larp"</a>
+                </div>
+            </div>
+        </div><!--/span-->
+        <div class="box span8" onTablet="span6" onDesktop="span8" style="height: 720px !important">
+          {{view App.DisqusView id="pepe"}}
+        </div><!--/span-->
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="map">
+    <div class="row-fluid ">
+      <div id="map-container" class="span10">
+          <div id="map" style="height:892px;"></div>
+      </div>
+      <div  style=" margin-top:-582px;margin-right:-318px;float:right;width:890px;-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-ms-transform:rotate(90deg);">
+          <div id="mytimeline" style="height:100%; width:100%"></div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="list_map">
+    <div class="row-fluid">
+      <div class="span3 ">
+        <div class="span12">
+          <div class="input-prepend" style="margin-left:15px">
+              <span class="add-on"><i title="{{unbound view.search_hint}}" class="halflings-icon search"></i></span>
+              <input class="span11" {{action "search" on="input"}} id="prependedInputButton" {{bindAttr value="query"}} type="text" title="{{unbound view.search_general_hint}}">
+          </div>
+        </div>
+        <div class="span12">
+          {{#ifequal this.rowHeight "105"}}
+            {{#collection App.ListView contentBinding="controller" height=856 rowHeight=105 width=400}}
+              {{view this.summary_template}}
+            {{/collection}}
+          {{else}}
+            {{#collection App.ListView contentBinding="controller" height=856 rowHeight=86 width=400}}
+              {{view this.summary_template}}
+            {{/collection}}
+          {{/ifequal}}
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="span9" style="position: relative; ">
+          <div class="player-map span12 " style="float:left;position:absolute;">
+            {{view App.MapView}}
+          </div>
+          <div id="general-content" class="message dark offset7 span5" style="float:left;position: absolute; display: none; z-index:1000;height:930px">
+            {{outlet}}
+          </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="player_summary">
+    {{#linkTo "player" this tagName="div" href=false class="summary-container"}}
+    <div {{bindAttr id="id"}} class="task visible result player-summary {{#ifequal fake_player "1" }}medium npc{{else}}low player{{/ifequal}} id-{{ id }}" >
+      <div class="desc" style="width:55% !important;" >
+          <div class="player-summary title" {{bindAttr title="id" }}>{{ name }}</div>
+              <i class="halflings-icon {{#ifequal fake_player '1'}}lock{{ else }}user{{/ifequal}}"> </i>
+              {{#ifequal team "heart_player" }} <i class="fa-icon-heart"></i>{{else}}
+                {{#ifequal team "hand_player" }}<i class="fa-icon-thumbs-up"></i>{{else}}
+                  {{#ifequal team "head_player" }}<i class="fa-icon-cloud"></i>{{else}}
+                  <i class="fa-icon-question-sign"></i> 
+                  {{/ifequal}}
+                {{/ifequal}}
+              {{/ifequal}}
+              {{ experience }} exp
+              {{#ifnotequal messages_decoded "0" }}<i class="halflings-icon list-alt"> </i> {{ messages_decoded }}{{/ifnotequal}}
+              {{#ifnotequal messages_coded "0" }}<i class="halflings-icon envelope"> </i> {{ messages_coded }}{{/ifnotequal}}
+              {{#ifnotequal available_rituals "0" }}<i class="fa-icon-fire"> </i> {{ available_rituals }}{{/ifnotequal}}
+              {{#ifnotequal quests_count "0" }}<i class="fa-icon-book"> </i> {{ quests_count }}{{/ifnotequal}}
+              {{#if last_known_location.longitude }}<span {{bindAttr id="location_id"}} onmouseover="App.loadLocation(this);" {{bindAttr data-longitude="last_known_location.longitude"}} {{bindAttr data-latitude="last_known_location.latitude"}} title="unknown"><i class="fa-icon-globe"> </i> </span>{{/if}}
+          <br>
+          <span class="label label-info">{{float blue_mana }}</span> <span class="label label-important">{{float red_mana}}</span> <span class="label label-yellow">{{float green_mana}}</span>
+      </div>
+      <div class="time" style="width:35% !important;">
+          <div class="date pull-right" style="font-size:14px !important;">{{date last_connect_time }}</div>
+          <div class="pull-right">{{date last_connect_time format="now"}} </div>
+      </div>
+    </div>
+    {{/linkTo}}
+  </script>
+
+  <script type="text/x-handlebars" id="ritual_summary">
+    {{#linkTo "ritual" this tagName="div" href=false class="summary-container"}}
+    <div {{bindAttr id="id" }} class="task visible result ritual-summary {{#ifequal active "1" }}medium inactive{{ else }}low active{{/ifequal}} id-{{unbound id }}" >
+      <div class="desc" style="width:55% !important;">
+          <div class="ritual-summary title" {{bindAttr title="id"}}>{{ name }}</div>
+          {{#if last_known_location }}<span {{bindAttr id="location_id"}} onmouseover="App.loadLocation(this);" {{bindAttr data-longitude="last_known_location.longitude"}} {{bindAttr data-latitude="last_known_location.latitude"}} title="unknown"><i class="halflings-icon globe"></i></span>{{/if}}
+          {{#ifnotequal messages_count "0" }} <i class="fa-icon-envelope"></i> {{ messages_count }}{{/ifnotequal}}
+          {{#ifnotequal owner_id "#0" }}<i class="fa-icon-user"></i> {{ owner_name}}{{/ifnotequal}}
+          <br><span class="label">{{ parent_name }}</span> {{#if red_mana_generation}}<span class="label label-info">{{float blue_mana_generation}}</span> <span class="label label-important">{{float red_mana_generation}}</span> <span class="label label-yellow">{{float green_mana_generation}}</span>{{/if}}
+      </div>
+      <div class="time" style="width:35% !important;">
+          <div class="date pull-right" style="font-size:14px !important;">{{date activity_time format="now"}}</div>
+      </div>
+    </div>
+    {{/linkTo}}
+  </script>
+
+  <script type="text/x-handlebars" id="quest_summary">
+    {{#linkTo "quest" this tagName="div" href=false class="summary-container"}}
+    <div {{bindAttr id="id"}} class="task low visible result quest-summary">
+      <div class="desc" style="width:85% !important;">
+        <br>
+        <div class="quest-summary title" {{bindAttr title="id"}}>{{ name }}</div>
+        <i class="fa-icon-group"></i> {{ players_enrolled }} <i class="fa-icon-reorder"></i> {{ sub_quests }}
+        <br>
+      </div>
+    </div>
+    {{/linkTo}}
+  </script>
+
+  <script type="text/x-handlebars" id="message_summary">
+    {{#linkTo "message" this tagName="div" href=false class="summary-container"}}
+    <div {{bindAttr id="id"}}  style="text-align:left !important;" class="task low message-summary{{ section }} div visible result {{#ifequal public "1" }}public{{ else }}private{{/ifequal}} {{#ifequal decoded "1" }}read{{else }}unread{{/ifequal }}" style="padding-bottom: 2px;padding-top: 5px;">
+        <div class="desc" style="width:60% !important;">
+          <div class="ritual-summary title" {{bindAttr title="id"}}>{{cut name length="15"}}</div>
+
+          <div style="font-size: 14px;" class="message-summary title" title="{{ message.id }}" >{{ message.name }}</div>
+          {{#ifequal decoded "1" }}<i title="read" class="halflings-icon list-alt"></i>{{ else }} <i title="unread" class="halflings-icon envelope"></i>{{/ifequal}} 
+          {{#ifequal public "1" }}<i title="public" class="halflings-icon ok-circle"></i> {{ else }}<i title="private" class="halflings-icon ban-circle"></i>{{/ifequal}}
+          {{#if last_known_location.longitude }}<span {{bindAttr id="location_id"}} onmouseover="App.loadLocation(this);" {{bindAttr data-longitude="last_known_location.longitude"}} {{bindAttr data-latitude="last_known_location.latitude"}} title="unknown"><i class="halflings-icon globe"></i></span>{{/if}}
+          
+          <span title="location"><i class="fa-icon-user"></i> </span> 
+          <span {{bindAttr title="location_name"}} onclick="App.loadDetailedView('{{unbound location_id}}');">{{cut location_name length=35 dots=true}}</span><br>
+
+          <span title="destination"><i class="fa-icon-signout"></i></span>
+          <span {{bindAttr title="destination_name"}} onclick="App.loadDetailedView('{{unbound destination_id}}');"> {{cut destination_name length=10 dots=true}}</span>
+          <span title="recipient"><i class="fa-icon-signout"></i> </span> <span {{bindAttr title="recipient_name"}} onclick="App.loadDetailedView('{{unbound recipient_id}}'); return false; ">  {{cut recipient_name length=10 dots=true}}</span>
+          <span title="message_cost" style="display:none"><i class="fa-icon-upload-alt"></i> {{ message_cost }}</span>
+          <br><span class="label label-info">{{float blue_mana}}</span> <span class="label label-important">{{float red_mana}}</span> <span class="label label-yellow">{{float green_mana}}</span>
+        </div>
+
+
+        <div class="time" style="margin-right:0px; width:30% !important;">
+            <div class="date" style="font-size:14px !important;">{{date last_updated format="MMMM Do, h:mm"}}</div>
+            <div>{{date last_updated format="now"}}</div>
+        </div>
+    </div>
+    {{/linkTo}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="player">
+    <div class="header">
+      <h1 id="profile-name"><i class="fa-icon-user"></i> {{ name }} <span class="pull-right" {{action "closeInfo"}} > x</span></h1>
+      <div class="date"><strong>[ {{ id }} ]</strong> </div>
+      <div class="from"><i class="halflings-icon time"></i> {{date last_connect_time}}<br>
+          {{#if last_known_location.latitude }}<i class="fa-icon-globe"></i>  <span  {{bindAttr id="location_id"}} {{bindAttr data-latitude="last_known_location.latitude"}} {{bindAttr data-longitude="last_known_location.longitude"}}><span id="location-auto-load" {{bindAttr data-latitude="last_known_location.latitude"}} {{bindAttr data-longitude="last_known_location.longitude"}} >[{{unbound last_known_location.latitude }},{{unbound last_known_location.longitude }}]</span>{{/if}}
+      </div>
+      <div class="menu"></div>
+    </div>
+    <div class="content" style="margin-top: -50px;">
+        <div class="span12 row">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2>
+                        Information
+                    </h2>
+                </div>
+                <div class="box-content" style="min-height:300px">
+                    <ul class="nav tab-menu nav-tabs" id="myTab" >
+                        {{#if rituals }}<li class="tab-button profile-rituals"><a href="#profile-rituals"><i class="fa-icon-fire"></i> </a></li>{{/if}}
+                        {{#if messages }}<li class="tab-button profile-messages"><a href="#profile-messages"><i class="halflings-icon envelope"></i> </a></li>{{/if}}
+                        {{#if quests }}<li class="tab-button profile-quests"><a href="#profile-quests"><i class="fa-icon-book"></i> </a></li>{{/if}}
+                        <li class="tab-button profile-info"><a href="#profile-info"><i class="fa-icon-info-sign"></i> </a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content" style="height:300px">
+                        <div class="tab-pane" id="profile-info" style="text-align:justify; margin-right: 5px">
+                            <div id="buttonInfo" class="row-fluid span11" style="margin-left:15px !important; margin-top:30px">
+                                <a class="quick-button-small span3" href="#profile-info">
+                                    {{#ifequal team "heart_player" }} <i class="fa-icon-heart"></i>{{else}}
+                                      {{#ifequal team "hand_player" }} <i class="fa-icon-thumbs-up"></i>{{else}}
+                                       {{#ifequal team "head_player" }} <i class="fa-icon-cloud"></i>{{else}}
+                                        <i class="fa-icon-question-sign"></i>{{/ifequal}}
+                                      {{/ifequal}}
+                                    {{/ifequal}}
+                                    <p>{{ experience }}</p>
+                                </a>
+                                <a class="quick-button-small span3" href="#profile-quests">
+                                    <i class="fa-icon-book"></i>
+                                    <p>{{length quests}}</p>
+                                </a>
+                                <a class="quick-button-small span3" href="#profile-messages">
+                                    <i class="fa-icon-envelope"></i>
+                                    <p>{{length messages}}</p>
+                                </a>
+                                <a class="quick-button-small span3" href="#profile-rituals">
+                                    <i class="fa-icon-fire"></i>
+                                    <p> {{length rituals }}</p>
+                                </a>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="row-fluid span11 " style="margin-top:20px">
+                                <div class="span4">
+                                    <div class="circleStatsItem blue">
+                                        <i class="fa-icon-cloud"></i>
+                                        <input type="text" {{bindAttr value="blue_mana"}} class="blueCircle" />
+                                    </div>
+                                </div>
+                                <div class="span4">
+                                    <div class="circleStatsItem red">
+                                        <i class="fa-icon-heart"></i>
+                                        <input type="text" {{bindAttr value="red_mana"}} class="orangeCircle" />
+                                    </div>
+                                </div>
+                                <div class="span4">
+                                    <div class="circleStatsItem yellow">
+                                        <i class="fa-icon-thumbs-up"></i>
+                                        <input type="text" {{bindAttr value="green_mana"}} class="yellowCircle" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="profile-messages" style="text-align:justify; margin-right: 5px">
+                            <ul class="dashboard-list">
+                                {{#each messages}}
+                                  {{render "message_summary" this}}
+                                {{/each}}
+                            </ul>
+                        </div>
+                        <div class="tab-pane" id="profile-rituals">
+                            {{#each rituals }}
+                               {{render "ritual_summary" this}}
+                            {{/each}}
+                        </div>
+                        <div class="tab-pane" id="profile-quests">
+                            {{#each quests }}
+                              {{render "quest_summary" this}}
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span12 row noMarginLeft">
+            {{view App.DisqusView }}
+        </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="ritual">
+    <div class="header">
+        <h1 id="profile-name"><i class="fa-icon-fire"></i> {{ name }} <span class="pull-right" {{action "closeInfo"}}>x</span></h1>
+        <div class="date"><strong>[ {{ id }} ]</strong></div>
+        <div class="from">
+            {{#ifnotequal owner_id "#0" }}<span onclick="App.loadDetailedView('{{unbound owner_id }}');" title="{{unbound owner_id}}" ><i class="fa-icon-user"></i> <strong class="btn-link"> {{ owner_name}}</strong><br></span>{{/ifnotequal}}
+            {{#if last_known_location }}<i class="fa-icon-globe"></i> <span  {{bindAttr id="location_id"}} data-latitude="{{ last_known_location.latitude }}" {{bindAttr data-longitude="last_known_location.longitude"}}></span><span id="location-auto-load" {{bindAttr data-latitude="last_known_location.latitude"}} {{bindAttr data-longitude="last_known_location.longitude"}} >[{{unbound last_known_location.latitude }},{{unbound last_known_location.longitude }}]</span>{{/if}}
+        </div>
+        <div class="menu"></div>
+    </div>
+    <div class="content" style="margin-top: -50px;">
+        <div class="span12 row">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2>
+                        Information
+                    </h2>
+                </div>
+                <div class="box-content" style="min-height:300px">
+                    <ul class="nav tab-menu nav-tabs" id="myTab" >
+                        {{#if messages}}<li class><a href="#profile-messages"><i class="halflings-icon envelope"></i> </a></li>{{/if}}
+                        <li class><a href="#profile-info"><i class="halflings-icon info-sign"></i> </a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content" style="height:300px">
+                        <div class="tab-pane" id="profile-info" style="text-align:justify; margin-right: 5px">
+                            <i class="fa-icon-caret-right"></i> <i> Description: </i><br><br>
+                                    
+                        </div>
+                        <div class="tab-pane" id="profile-messages" style="text-align:justify; margin-right: 5px">
+                            <ul class="dashboard-list">
+                              {{#each messages}}
+                                  {{render "message_summary" this}}
+                              {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span12 row noMarginLeft">
+            {{view App.DisqusView}}
+        </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="message">
+    <div class="header">
+        <h1><i class="fa-icon-envelope"></i> {{ name }} <span class="pull-right" {{action "closeInfo"}}>x</span></h1>
+        <div class="date"><strong>[ {{ id }} ]</strong></div>
+        <div class="from">
+            {{#if last_known_location.longitude  }}<i class="fa-icon-globe"></i> <span id="location-auto-load" {{bindAttr data-latitude="last_known_location.latitude"}} {{bindAttr data-longitude="last_known_location.longitude"}} >[]</span><br>{{/if}}
+            <span onclick="App.loadDetailedView('{{unbound location_id }}');"><i class="fa-icon-user"></i>  <strong class="btn-link">  {{ location_name }} </strong><br></span>
+            <i class="halflings-icon time"></i> {{date last_updated}}
+        </div>
+
+        <div class="menu">
+        </div>
+    </div>
+    <div class="content" style="margin-top: -50px;">
+        <div class="span12 row">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2>
+                        Information
+                    </h2>
+                </div>
+                <div class="box-content" style="min-height:300px">
+                    <ul class="nav tab-menu nav-tabs" id="myTab" >
+                        <li class><a href="#message-info"><i class="halflings-icon info-sign"></i> </a></li>
+                        <li class><a href="#message-info-content"><i class="halflings-icon envelope"></i> </a></li>
+                        
+                    </ul>
+                    <div id="myTabContent" class="tab-content" style="height:300px">
+                        <div class="tab-pane" id="message-info-content" style="text-align:justify; margin-right: 5px;margin-left: 10px">
+                            <em>from:</em> <span ><strong class="btn-link" onclick="App.loadDetailedView('{{unbound reply_to_id }}');">  {{ reply_to_name }}</strong> <br>
+                            <em>to:</em> <span  ><strong class="btn-link" onclick="App.loadDetailedView('{{unbound recipient_id }}');"> {{ recipient_name }}</strong><br>
+                            <em>deliver on:</em><strong class="btn-link" onclick="App.loadDetailedView('{{unbound destination_id }}');"> {{ destination_name }}</strong><br><br><br>
+                            <blockquote >{{#if content.content}}{{content.content}}{{else}}Empty message<br><br>{{/if}}</blockquote>
+                        </div>
+                        <div class="tab-pane" id="message-info">
+                            <br><br>
+                            <div class="row-fluid span11 " style="margin-top:20px">
+                                <div class="span4">
+                                    <div class="circleStatsItem blue">
+                                        <i class="fa-icon-cloud"></i>
+                                        <input type="text" {{bindAttr value="blue_mana"}} class="blueCircle" />
+                                    </div>
+                                </div>
+                                <div class="span4">
+                                    <div class="circleStatsItem red">
+                                        <i class="fa-icon-heart"></i>
+                                        <input type="text" {{bindAttr value="red_mana"}} class="orangeCircle" />
+                                    </div>
+                                </div>
+                                <div class="span4">
+                                    <div class="circleStatsItem yellow">
+                                        <i class="fa-icon-thumbs-up"></i>
+                                        <input type="text" {{bindAttr value="green_mana"}} class="yellowCircle" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="span12 row noMarginLeft">
+           {{view App.DisqusView}}
+        </div>
+    </div>
+  </script>
+
+
+  <script type="text/x-handlebars" id="quest">
+    <div class="header">
+        <h1 id="profile-name"><i class="fa-icon-book"></i> {{ name }} <span class="pull-right" {{action "closeInfo"}}>x</span></h1>
+        <div class="date"><strong>[ {{ id }} ]</strong> </div>
+        <div class="menu"></div>
+    </div>
+    <div class="content" style="margin-top: -50px;">
+        <div class="span12 row">
+            <div class="box span12">
+                <div class="box-header">
+                    <h2>
+                        Information
+                    </h2>
+                </div>
+                <div class="box-content" style="min-height:300px">
+                    <ul class="nav tab-menu nav-tabs" id="myTab" >
+                        <li class {{action "showModal" on="click"}}><a href="#profile-add-user" ><i class="fa-icon-plus"></i> </a></li>
+                        <li class><a href="#profile-groups"><i class="fa-icon-group"></i> </a></li>
+                        <li class><a href="#profile-info"><i class="fa-icon-info-sign"></i> </a></li>
+                    </ul>
+                    <div id="myTabContent" class="tab-content" style="height:300px">
+                        <div class="tab-pane" id="profile-info" style="text-align:justify; margin-right: 5px">
+                            <div id="quest-visualization" {{bindAttr data-json-visualization='json_visualization'}}></div>
+                        </div>
+                        <div class="tab-pane" id="profile-groups" style="text-align:justify; margin-right: 5px">
+                            <select id="quest-select-subquest" {{action "onSubquestSelect"  on="change" target="view"}}>
+                                <option>({{players_enrolled}}) all</option>
+                                {{#each quest in quest_structure}}
+                                    <option>({{quest.player_list.length}}) {{ quest.name }}</option>
+                                {{/each}}
+                            </select>
+                            <ul class="dashboard-list" id="quest-player-list">
+                              {{#each subquest in quest_structure }}
+                                {{#each group in subquest.player_list}}
+                                  {{#each player in group.members}}
+                                  <div class="quest-player {{unbound subquest.name}}">
+                                    {{render "player_summary" player sectionBinding="quest"}}
+                                  </div>
+                                  {{/each}}
+                                {{/each}}
+                              {{/each}}
+                            </ul>
+                        </div>
+                        <div class="tab-pane" id="profile-add-user" style="text-align:justify; margin-right: 5px">
+                            <div class="input-prepend" style="margin-left:15px">
+                                <span class="add-on"><i title="" class="halflings-icon search"></i></span>
+                                <input class="span11" id="prependedInputButton" value="" type="text" title="a OR b, a AND b, - to negate">
+                            </div>
+                            <ul class="dashboard-list" id="quest-unassigned-player-list">
+                              {{#each player in unassigned_players }}
+                                <div class="quest-unassigned-player">
+                                  {{render "player_summary" player sectionBinding="quest"}}
+                                </div>
+                              {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="span12 row noMarginLeft">
+            {{view App.DisqusView}}
+        </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="disqus">
+    <div id="disqus_thread" style="height: 720px !important; overflow-y: auto"></div>
+  </script>
+
+
+
+  <!-- start: JavaScript-->
+  <script src="config/config.js"></script>
+  <script src="js/libs/jquery-1.9.1.js"></script>
+  <script src="js/libs/jquery-ui-1.8.21.custom.min.js"></script>
+  <script src="js/libs/modernizr.js"></script>
+  <script src="js/libs/bootstrap.js"></script>
+  <script src="js/libs/jquery.cookie.js"></script>
+  <script src='js/libs/fullcalendar.min.js'></script>
+  <script src='js/libs/jquery.dataTables.min.js'></script>
+  <script src="js/libs/excanvas.js"></script>
+  <script src="js/libs/jquery.flot.js"></script>
+  <script src="js/libs/jquery.flot.pie.js"></script>
+  <script src="js/libs/jquery.flot.stack.js"></script>
+  <script src="js/libs/jquery.flot.resize.min.js"></script>
+  <script src="js/libs/jquery.noty.js"></script>
+  <script src="js/libs/jquery.raty.min.js"></script>
+  <script src="js/libs/jquery.iphone.toggle.js"></script>
+  <script src="js/libs/jquery.uploadify-3.1.min.js"></script>
+  <script src="js/libs/jquery.gritter.min.js"></script>
+  <script src="js/libs/jquery.imagesloaded.js"></script>
+  <script src="js/libs/jquery.masonry.min.js"></script>
+  <script src="js/libs/jquery.knob.modified.js"></script>
+  <script src="js/libs/counter.js"></script>
+  <script src="js/libs/retina.js"></script>
+  <script src="js/libs/jquery.cookies.js"></script>
+  <script src="js/libs/handlebars-1.0.0-rc.3.js"></script>
+  <script src="js/libs/ember.js"></script>
+  <script src="js/libs/ember-data.js"></script>
+  <script src="js/libs/ember-auth.js"></script>
+  <script src="js/libs/ember-list-view.js"></script>
+  <script src="js/libs/moment.min.js"></script>
+  <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+  <script type="text/javascript" src="js/libs/timeline/timeline.js"></script>
+  <script src="js/libs/d3.v3.min.js"></script>
+  <script src="js/quest_visualization.js"></script>
+  <script src="js/libs/leaflet-src.js"></script>
+  <script src="js/libs/leaflet.bounce.js"></script>
+  <script src="js/libs/leaflet.label.js"></script>
+  <script src="js/libs/leaflet.polylineDecorator.js"></script>
+  <script src="js/libs/QuadTree.js"></script>
+  <script src="js/libs/heatmap.js"></script>
+  <script src="js/libs/heatmap-leaflet.js"></script>
+  <script src="js/libs/oms.min.js"></script>
+  <script src="js/libs/autobahn.min.js"></script>
+  <script src="js/libs/tardisJS/tardis.js"></script>
+  <script src="js/codenameWeb.js"></script>
+  <script src="js/app.js"></script>
+  <!-- end: JavaScript-->
+</body>
+</html>

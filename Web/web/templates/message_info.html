@@ -1,0 +1,67 @@
+{% load timetags %}
+
+<div class="header">
+    <h1><i class="fa-icon-envelope"></i> {{ message.name }} <span class="pull-right" onclick="$('#general-content').addClass('animated fadeOutRightBig');window.setTimeout( function(){$('#general-content').removeClass('animated fadeOutRightBig').css('display','none');},1000);">x</span></h1>
+    <div class="date"><strong>[ {{ message.id }} ]</strong></div>
+    <div class="from">
+        {% if message.last_known_location.longitude != "" %}<i class="fa-icon-globe"></i> <span id="location-auto-load" data-latitude="{{ message.last_known_location.latitude }}" data-longitude="{{ message.last_known_location.longitude }}" >[{{ message.last_known_location.latitude }},{{ message.last_known_location.longitude }}]</span><br>{% endif %}
+        <span onclick="Show('{{ message.location_id }}');"><i class="fa-icon-user"></i> {{ message.location_name }}<br></span>
+        <i class="halflings-icon time"></i> {{ message.last_updated|print_timestamp|date:"f, d M. o"}}
+    </div>
+
+    <div class="menu">
+    </div>
+
+</div>
+<div class="content" style="margin-top: -50px;">
+    <div class="span12 row">
+        <div class="box span12">
+            <div class="box-header">
+                <h2>
+                    Information
+                </h2>
+            </div>
+            <div class="box-content" style="min-height:300px">
+                <ul class="nav tab-menu nav-tabs" id="myTab" >
+                    {% if message.owner_id != "#0" %}<li class><a href="#message-info-user"><i class="halflings-icon user"></i> </a></li>{% endif %}
+                    <li class><a href="#message-info-content"><i class="halflings-icon envelope"></i> </a></li>
+                    <li class><a href="#message-info"><i class="halflings-icon info-sign"></i> </a></li>
+                </ul>
+                <div id="myTabContent" class="tab-content" style="height:300px">
+                    <div class="tab-pane" id="message-info-content" style="text-align:justify; margin-right: 5px;margin-left: 10px">
+                        <em>from:</em> <span ><strong onclick="Show('{{ message.reply_to_id }}');">  {{ message.reply_to_name }}</strong> <br>
+                        <em>to:</em> <span  ><strong onclick="Show('{{ message.recipient_id }}');"> {{ message.recipient_name }}</strong><br>
+                        <em>deliver on:</em><strong onclick="Show('{{ message.destination_id }}');"> {{ message.destination_name }}</strong><br><br><br>
+                        <blockquote>{{ message.content }}</blockquote>
+                    </div>
+                    <div class="tab-pane" id="message-info">
+                        <div class="row-fluid span11 " style="margin-top:20px">
+                            <div class="span4">
+                                <div class="circleStatsItem blue">
+                                    <i class="fa-icon-cloud"></i>
+                                    <input type="text" value="{{ message.blue_mana }}" class="blueCircle" />
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="circleStatsItem red">
+                                    <i class="fa-icon-heart"></i>
+                                    <input type="text" value="{{ message.red_mana }}" class="orangeCircle" />
+                                </div>
+                            </div>
+                            <div class="span4">
+                                <div class="circleStatsItem yellow">
+                                    <i class="fa-icon-thumbs-up"></i>
+                                    <input type="text" value="{{ message.green_mana }}" class="yellowCircle" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="span12 row noMarginLeft">
+        {% include "comments.html" with id=message.id name=message.name %}
+    </div>
+</div>
